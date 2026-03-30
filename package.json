@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "kambaz-node-server-app",
+  "version": "1.0.0",
+  "description": "Node.js HTTP Web server for the Kambaz application",
+  "keywords": [
+    "Node",
+    "REST"
+  ],
+  "homepage": "https://github.com/adrodvaz04/kambaz-node-server-app#readme",
+  "bugs": {
+    "url": "https://github.com/adrodvaz04/kambaz-node-server-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrodvaz04/kambaz-node-server-app.git"
+  },
+  "license": "ISC",
+  "author": "Adrian Rodriguez",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "uuid": "^13.0.0"
+  }
+}
