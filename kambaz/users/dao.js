@@ -2,7 +2,7 @@ import userModel from "./model.js";
 import { v4 as uuidv4 } from "uuid";
 export default function UsersDao() {
   const createUser = (user) => {
-    const user = { ...user, _id: uuidv4() };
+    const newUser = { ...user, _id: uuidv4() };
     return userModel.create(newUser);
   }; 
   const findAllUsers = () => userModel.find();
