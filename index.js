@@ -10,7 +10,10 @@ import db from "./kambaz/database/index.js";
 import ModulesRoutes from "./kambaz/modules/routes.js";
 import AssignmentRoutes from "./kambaz/assignments/routes.js";
 import EnrollmentRoutes from "./kambaz/enrollments/routes.js";
+import mongoose from "mongoose";
 
+const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mondodb://127.0.0.1:27017/kambaz"
+mongoose.connect(CONNECTION_STRING);
 const app = express();
 app.use(
   cors({
@@ -34,11 +37,11 @@ if (process.env.SERVER_ENV !== "development") {
 }
 app.use(session(sessionOptions));
 app.use(express.json());
-UserRoutes(app, db);
-CourseRoutes(app, db);
-ModulesRoutes(app, db);
-AssignmentRoutes(app, db);
-EnrollmentRoutes(app, db);
+UserRoutes(app);
+CourseRoutes(app);
+ModulesRoutes(app);
+AssignmentRoutes(app);
+EnrollmentRoutes(app);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
