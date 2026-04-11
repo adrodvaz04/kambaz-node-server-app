@@ -1,40 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
-export default function AssignmentsDao(db) {
-  function findAllAssignments() {
-    return db.assignments;
+import model from "./model.js";
+export default function AssignmentsDao() {
+  async function findAllAssignments() {
+    return await model.find();
   }
 
-  function getAssignmentsByCourse(courseId) {
-    const {assignments} = db;
-    return assignments.filter((a) => a.course === courseId);
+  async function getAssignmentsByCourse(courseId) {
+    const assignments = await model.find({course: courseId});
+    return assignments;
   }
 
   // create assignmnet
-  function createAssignment(assignment) {
+  async function createAssignment(assignment) {
     const newAssignment = { ...assignment, _id: uuidv4() };
-    db.assignments = [...db.assignments, newAssignment];
-    return newAssignment;
+    return await model.create(newAssignment);
   }
 
   // retrieve assignment
-  function getAssignmentById(assignmentId) {
-    const { assignments } = db;
-    const assignment = assignments.find((a) => a._id === assignmentId);
-    return assignment;
+  async function getAssignmentById(assignmentId) {
+    return await model.findById(assignmentId);
   }
 
   // update assigment
-  function updateAssignment(assignmentId, assignmentUpdate) {
-    const { assignments } = db;
-    const assignment = assignments.find((a) => a._id === assignmentId);
-    Object.assign(assignment, assignmentUpdate);
-    return assignment;
+  async function updateAssignment(assignmentId, assignmentUpdate) {
+    return await model.updateOne(
+      { _id: assignmentId },
+      { $set: assignmentUpdate },
+    );
   }
 
   // delete assignment
-  function deleteAssignment(assignmentId) {
-    const { assignments } = db;
-    db.assignments = assignments.filter((a) => a._id !== assignmentId);
+  async function deleteAssignment(assignmentId) {
+    return await model.deleteOne({_id: assignmentId});
   }
 
   return {
@@ -43,6 +40,6 @@ export default function AssignmentsDao(db) {
     getAssignmentById,
     createAssignment,
     updateAssignment,
-    deleteAssignment
+    deleteAssignment,
   };
 }
