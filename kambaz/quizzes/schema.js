@@ -10,6 +10,7 @@ const AssignmentGroups = ["quizzes", "exams", "assignments", "projects"];
 const QuestionTypes = ["true-false", "multiple-choice", "fill-in-blank"];
 
 const quizSchema = new mongoose.Schema({
+  _id: String,
   title: String,
   user_id: { type: String, ref: "UserModel" },
   course: { type: String, ref: "CourseModel" },
@@ -17,11 +18,15 @@ const quizSchema = new mongoose.Schema({
   availableUntil: Date,
   dueDate: Date,
   points: Number,
+  published: Boolean,
   // Quiz Details
-  quiz_id: { type: String, ref: "QuizModel" },
-  quizType: { type: String, enum: QuizTypes }, 
-  assignment_group: { type: String, enum: AssignmentGroups }, 
-  shuffle_answers: Boolean,
+  quizType: { type: String, enum: QuizTypes, default: "graded-quiz" },
+  assignment_group: {
+    type: String,
+    enum: AssignmentGroups,
+    default: "quizzes",
+  },
+  shuffle_answers: { type: Boolean, default: true },
   time_limit_mins: { type: Number, default: 20 },
   multiple_attempts: { type: Boolean, default: true },
   max_attempts: { type: Number, default: 1 },
@@ -32,17 +37,18 @@ const quizSchema = new mongoose.Schema({
   lock_questions: Boolean,
   questions: [
     {
-      quiz_id: { type: String, ref: "QuizModel" },
       title: String,
       questionType: { type: String, enum: QuestionTypes },
       points: Number,
       question: String,
       answers: [String],
+      correctAnswers: [String],
     },
-  ]
+  ],
 });
 
 const quizAttemptSchema = new mongoose.Schema({
+  _id: String,
   quiz_id: { type: String, ref: "QuizModel" },
   user_id: { type: String, ref: "UserModel" },
   answers: [

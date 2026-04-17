@@ -9,9 +9,9 @@ export default function QuizRoutes(app) {
     const { published } = req.query;
 
     if (published) {
-        const quizzes = await quizDao.getPublishedQuizzesbyCourse(courseId);
-        res.json(quizzes);
-        return;
+      const quizzes = await quizDao.getPublishedQuizzesbyCourse(courseId);
+      res.json(quizzes);
+      return;
     }
 
     const quizzes = await quizDao.getQuizzesByCourse(courseId);
@@ -27,6 +27,16 @@ export default function QuizRoutes(app) {
     }
 
     const quizzes = await quizDao.getQuizzesByUser(currentUser._id);
+  };
+
+  const getQuizById = async (req, res) => {
+    const { quizId } = req.params;
+    const quiz = await quizDao.getQuizById(quizId);
+    if (!quiz) {
+      res.status(400).message(`Quiz with ID ${quizId} not found.`);
+      return;
+    }
+    res.json(quiz);
   };
 
   const createQuiz = async (req, res) => {
@@ -79,7 +89,7 @@ export default function QuizRoutes(app) {
   };
 
   const getQuizAttempts = async (req, res) => {
-    const { quizId, courseId } = req.params;
+    const { quizId, courseId } = req.query;
     const { username, password } = req.body;
 
     if (quizId) {
@@ -128,13 +138,13 @@ export default function QuizRoutes(app) {
 
   app.get("/api/quizzes/course/:courseId", getQuizzesByCourse);
   app.get("/api/quizzes", getQuizzesByUser); // needs credentials
+  app.get("/api/quizzes/:quizId", getQuizById);
   app.post("/api/quizzes", createQuiz);
   app.put("/api/quizzes", updateQuiz);
-  app.delete("/api/quizzes", deleteQuiz);
+  app.delete("/api/quizzes/:quizId", deleteQuiz);
   app.post("/api/quizzes/:quizId/attempts", addQuizAttempt); // needs credentials for user
   app.get("/api/quizzes/:quizId/attempts", getQuizAttempts);
-  app.get("/api/attempts/courses/:courseId", getQuizAttempts);
-  app.get("/api/attempts/users/:userId", getQuizAttempts);
-  app.delete("/api/attempts/:attemptId", deleteQuizAttempt);
-  app.delete("/api/attempts/quizzes/:quizId", deleteAllQuizAttempts);
+  app.get("/api/quizzes/attempts", getQuizAttempts);
+  app.delete("/api/quizzes/:quizId/attempts", deleteAllQuizAttempts);
+  app.delete("/api/quizzes/attempts/:attemptId", deleteQuizAttempt);
 }

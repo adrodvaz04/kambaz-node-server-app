@@ -26,9 +26,9 @@ export default function ModulesDao() {
     return status;
   }
 
-  async function updateModule(moduleId, moduleUpdates) {
+  async function updateModule(courseId, moduleUpdates) {
     const course = await model.findById(courseId);
-    const module = course.modules.id(moduleId);
+    const module = course.modules.id(moduleUpdates._id);
     Object.assign(module, moduleUpdates);
     await course.save();
     return module;

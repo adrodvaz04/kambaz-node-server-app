@@ -21,9 +21,9 @@ export default function ModulesRoutes(app) {
   };
 
   const updateModule = async (req, res) => {
-  const { couseId, moduleId } = req.params;
+  const { courseId, moduleId } = req.params;
   const moduleUpdates = req.body;
-  const status = await dao.updateModule(moduleId, moduleUpdates);
+  const status = await dao.updateModule(courseId, moduleUpdates);
   res.send(status);
 }
 
