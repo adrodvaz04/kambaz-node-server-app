@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const QuizTypes = [
-  "graded-quiz",
-  "practice-quiz",
-  "graded-survey",
-  "ungraded-survey",
+  "Graded Quiz",
+  "Practice Quiz",
+  "Graded Survey",
+  "Ungraded Survey",
 ];
-const AssignmentGroups = ["quizzes", "exams", "assignments", "projects"];
-const QuestionTypes = ["true-false", "multiple-choice", "fill-in-blank"];
+const AssignmentGroups = ["Quizzes", "Exams", "Assignments", "Projects"];
+const QuestionTypes = ["True/False", "Multiple Choice", "Fill-in-the-blank"];
 
 const quizSchema = new mongoose.Schema({
   _id: String,
@@ -30,7 +30,7 @@ const quizSchema = new mongoose.Schema({
   time_limit_mins: { type: Number, default: 20 },
   multiple_attempts: { type: Boolean, default: true },
   max_attempts: { type: Number, default: 1 },
-  show_correct_answers: Date,
+  show_correct_answers: Boolean,
   access_code: { type: String, default: "" },
   one_question_at_a_time: { type: Boolean, default: true },
   webcam_required: { type: Boolean, default: false },
@@ -45,6 +45,8 @@ const quizSchema = new mongoose.Schema({
       correctAnswers: [String],
     },
   ],
+}, {
+    collection: "quizzes"
 });
 
 const quizAttemptSchema = new mongoose.Schema({
@@ -58,6 +60,9 @@ const quizAttemptSchema = new mongoose.Schema({
     },
   ],
   attemptDate: Date,
+},
+{
+    collection: "quizAttempts"
 });
 
 export { quizSchema, quizAttemptSchema };

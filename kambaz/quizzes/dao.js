@@ -14,10 +14,15 @@ export default function QuizzesDao() {
     return quizzes;
   }
 
+  async function getQuizById(quizId) {
+    return await Quiz.find({ _id: quizId });
+  }
+
   async function getPublishedQuizzesbyCourse(courseId) {
     const quizzes = await Quiz.find({
       $and: [{ course: courseId }, { published: true }],
     });
+    return quizzes;
   }
 
   // create quiz: create quiz, quiz detail, quiz questions
@@ -27,12 +32,13 @@ export default function QuizzesDao() {
 
   // update quiz: update quiz instance, update quiz details
   async function updateQuiz(quiz) {
-    return await Quiz.findOneAndUpdate(quiz);
+    const updatedQuiz = await Quiz.findOneAndUpdate({_id: quiz._id}, quiz);
+    return updatedQuiz;
   }
 
   // delete quiz: delete quiz instance, delete quiz details
   async function deleteQuiz(quizId) {
-    return await Quiz.findOneAndDelete(quizId);
+    return await Quiz.findOneAndDelete({_id: quizId});
   }
 
   // addQuizAttempt
@@ -68,6 +74,7 @@ export default function QuizzesDao() {
     getQuizzesByCourse,
     getQuizzesByUser,
     getPublishedQuizzesbyCourse,
+    getQuizById,
     createQuiz,
     updateQuiz,
     deleteQuiz,
