@@ -64,6 +64,14 @@ export default function QuizzesDao() {
     return await QuizAttempt.deleteMany({ quiz_id: quizId });
   }
 
+
+  async function getQuizById(quizId) {
+    // console.log("searching for:", quizId);
+    const quiz = await Quiz.findOne({ _id: quizId });
+   // console.log("result:", quiz);
+    return quiz;
+  }
+
   return {
     getQuizzesByCourse,
     getQuizzesByUser,
@@ -72,6 +80,7 @@ export default function QuizzesDao() {
     updateQuiz,
     deleteQuiz,
     addQuizAttempt,
+    getQuizById,
     getQuizAttempts,
     getQuizAttemptsByCourse,
     getQuizAttemptsByUser,

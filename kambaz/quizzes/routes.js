@@ -19,23 +19,25 @@ export default function QuizRoutes(app) {
   };
 
   const getQuizzesByUser = async (req, res) => {
-    const { username, password } = req.body;
-
-    const currentUser = userDao.findUserByCredentials(username, password);
+    const currentUser = req.session.currentUser;
     if (!currentUser) {
-      res.status(400).json({ message: "Current user not found" });
+      res.status(401).json({ message: "Current user not found" });
+      return;
     }
 
     const quizzes = await quizDao.getQuizzesByUser(currentUser._id);
+    res.json(quizzes);
   };
 
   const getQuizById = async (req, res) => {
     const { quizId } = req.params;
+    console.log("getQuizById called with:", quizId);
     const quiz = await quizDao.getQuizById(quizId);
     if (!quiz) {
-      res.status(400).message(`Quiz with ID ${quizId} not found.`);
+      res.status(404).json({ message: `Quiz with ID ${quizId} not found.` });
       return;
     }
+    console.log("quiz found:", quiz);
     res.json(quiz);
   };
 
@@ -74,9 +76,9 @@ export default function QuizRoutes(app) {
   };
 
   const addQuizAttempt = async (req, res) => {
-    const { attempt, username, password } = req.body;
-    const currentUser = await userDao.findUserByCredentials(username, password);
-
+    const { attempt } = req.body;
+    const currentUser = await req.session.currentUser;
+    console.log("session:", req.session.currentUser);
     if (!currentUser) {
       res.status(400).json({ message: "Current user not found" });
       return;
@@ -85,43 +87,21 @@ export default function QuizRoutes(app) {
     const attemptWithUser = { ...attempt, user_id: currentUser._id };
 
     const status = await quizDao.addQuizAttempt(attemptWithUser);
-    res.status(status);
+    res.json(status);
   };
 
   const getQuizAttempts = async (req, res) => {
-    const { quizId, courseId } = req.query;
-    const { username, password } = req.body;
+    const { quizId, courseId } = req.params;
+    const currentUser = req.session.currentUser;
 
-    if (quizId) {
-      const attempts = await quizDao.getQuizAttempts(quizId);
-      res.json(attempts);
-      return;
+    if (!currentUser) {
+      res.status(401).json({message: "Not logged in"});
+      return
     }
+    const attempts = await quizDao.getQuizAttempts(quizId)
+    res.json(attempts)
 
-    if (courseId) {
-      const attempts = await quizDao.getQuizAttemptsByCourse(courseId);
-      res.json(attempts);
-      return;
-    }
-
-    if (username && password) {
-      const currentUser = await userDao.findUserByCredentials(
-        username,
-        password,
-      );
-      if (!currentUser) {
-        res.status(400).json({ message: "Current user not found." });
-        return;
-      }
-
-      const attempts = await quizDao.getQuizAttemptsByUser(currentUser._id);
-      res.json(attempts);
-      return;
-    }
-
-    res
-      .status(400)
-      .json({ message: "Quiz ID, course ID, and credentials not found." });
+    
   };
 
   const deleteQuizAttempt = async (req, res) => {
