@@ -16,7 +16,7 @@ export default function ModulesDao() {
     return newModule;
   }
 
-  async function deleteModule(moduleId) {
+  async function deleteModule(courseId, moduleId) {
     const status = await model.updateOne(
       {
         _id: courseId,
