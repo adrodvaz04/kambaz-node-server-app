@@ -44,6 +44,7 @@ export default function CourseRoutes(app, db) {
     res.send(status);
   };
 
+  app.get("/api/users/current/courses", findCoursesForEnrolledUser);
   app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
   app.get("/api/courses", findAllCourses);
   app.post("/api/users/current/courses", createCourse);
