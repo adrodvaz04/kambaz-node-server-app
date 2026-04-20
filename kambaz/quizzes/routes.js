@@ -90,15 +90,15 @@ export default function QuizRoutes(app) {
   };
 
   const addQuizAttempt = async (req, res) => {
-    const { attempt, userId } = req.body;
-    const currentUser = await userDao.findUserById(userId);
+    const { attempt } = req.body;
+    const currentUser = await userDao.findUserById(attempt.user_id);
 
     if (!currentUser) {
       res.status(400).json({ message: "Current user not found" });
       return;
     }
 
-    const attemptWithUser = { ...attempt, user_id: currentUser._id };
+    const attemptWithUser = { ...attempt };
 
     const newAttempt = await quizDao.addQuizAttempt(attemptWithUser);
     res.json(newAttempt);
