@@ -86,6 +86,7 @@ export default function QuizRoutes(app) {
   const deleteQuiz = async (req, res) => {
     const { quizId } = req.params;
     const deletedQuiz = await quizDao.deleteQuiz(quizId);
+    await quizDao.deleteAllQuizAttempts(quizId);
     res.json(deletedQuiz);
   };
 
